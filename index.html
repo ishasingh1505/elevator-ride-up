@@ -1,0 +1,537 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>The Elevator Ride Up</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg:#090909;
+      --card:#121212;
+      --accent:#f5b25d;
+      --text:#f5f5f5;
+      --muted:#9e9e9e;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Syne",sans-serif;
+      overflow-x:hidden;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+    }
+
+    main{
+      position:relative;
+      z-index:2;
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:clamp(2.5rem,8vw,6rem);
+      line-height:1;
+      margin-top:30px;
+      font-weight:800;
+
+      background:linear-gradient(to right,#fff,#f5b25d);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .tagline{
+      margin-top:18px;
+      color:var(--muted);
+      max-width:700px;
+      line-height:1.6;
+      font-size:1rem;
+      font-family:"Instrument Serif",serif;
+      font-style:italic;
+    }
+
+    /* VIDEO */
+
+    .video-shell{
+      width:min(92vw,900px);
+      aspect-ratio:16/9;
+
+      overflow:hidden;
+      border-radius:28px;
+
+      position:relative;
+
+      background:#000;
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      box-shadow:
+      0 0 60px rgba(245,178,93,0.15),
+      0 20px 80px rgba(0,0,0,0.6);
+
+      backdrop-filter:blur(12px);
+    }
+
+    .video-shell video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:inherit;
+      display:block;
+    }
+
+    /* BUTTON */
+
+    .hero button{
+      margin-top:24px;
+
+      border:none;
+      background:linear-gradient(135deg,#f5b25d,#ff7b54);
+
+      color:#111;
+      padding:14px 26px;
+
+      border-radius:999px;
+
+      font-weight:700;
+      cursor:pointer;
+
+      transition:0.3s;
+    }
+
+    .hero button:hover{
+      transform:scale(1.05);
+    }
+
+    /* MEMBERS */
+
+    .members{
+      width:min(1100px,92%);
+      margin:auto;
+      padding:120px 0;
+    }
+
+    .members-title{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .members-title h2{
+      font-size:3rem;
+      margin-bottom:12px;
+    }
+
+    .members-title p{
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:28px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+
+      border-radius:24px;
+
+      padding:28px;
+
+      transition:0.4s;
+      backdrop-filter:blur(10px);
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+      border-color:rgba(245,178,93,0.3);
+
+      box-shadow:
+      0 10px 40px rgba(245,178,93,0.12);
+    }
+
+    .floor{
+      color:var(--accent);
+      font-size:0.7rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .card h3{
+      font-size:2rem;
+      margin-bottom:10px;
+    }
+
+    .song{
+      color:#d9d9d9;
+      font-family:"Instrument Serif",serif;
+      font-style:italic;
+      margin-bottom:20px;
+    }
+
+    .thoughts{
+      color:#cfcfcf;
+      line-height:1.7;
+      font-size:0.95rem;
+    }
+
+    .emotion{
+      margin-top:18px;
+      color:var(--accent);
+      font-size:0.85rem;
+    }
+
+    /* AUDIO BUTTON */
+
+    .play-btn{
+      margin-top:24px;
+
+      width:100%;
+      border:none;
+
+      background:linear-gradient(135deg,#f5b25d,#ff7b54);
+
+      color:#111;
+
+      padding:14px;
+
+      border-radius:14px;
+
+      font-weight:700;
+
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .play-btn:hover{
+      transform:scale(1.02);
+    }
+
+    footer{
+      text-align:center;
+      padding:40px 20px 70px;
+      color:#666;
+      font-size:0.9rem;
+    }
+
+    @media(max-width:700px){
+
+      .hero{
+        padding-top:70px;
+      }
+
+      .members-title h2{
+        font-size:2.2rem;
+      }
+
+      .card h3{
+        font-size:1.7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<main>
+
+  <section class="hero">
+
+    <div class="video-shell">
+
+      <!-- PUT VIDEO INSIDE assets FOLDER -->
+
+      <video
+        id="heroVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        controls
+      >
+        <source src="./assets/elevator.mp4" type="video/mp4">
+      </video>
+
+    </div>
+
+    <h1>The Elevator Ride Up</h1>
+
+    <p class="tagline">
+      A soundtrack for the weird in-between phase —
+      not students anymore,
+      not professionals yet,
+      just trying to become something.
+    </p>
+
+    <button id="muteBtn">
+      Unmute Video
+    </button>
+
+  </section>
+
+  <section class="members">
+
+    <div class="members-title">
+      <h2>The Mixtape Crew</h2>
+      <p>Every floor has a story.</p>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+  </section>
+
+  <footer>
+    made with too much coffee and internship anxiety.
+  </footer>
+
+</main>
+
+<script>
+
+const TEAM = [
+
+  {
+    name:"Isha",
+    song:"Becoming",
+    emotion:"trying to figure it out while pretending you already did",
+    thoughts:
+    "Everyone looks so sure of themselves in corporate buildings. Meanwhile I’m still learning how to introduce myself without sounding nervous.",
+    audio:"./assets/song1.mp3"
+  },
+
+  {
+    name:"Akshat",
+    song:"Floor 23",
+    emotion:"ambition louder than fear",
+    thoughts:
+    "The scary part isn’t failing. It’s realizing this is finally real and there’s no classroom left to hide behind.",
+    audio:"./assets/song2.mp3"
+  },
+
+  {
+    name:"Sam",
+    song:"City Lights Static",
+    emotion:"overthinking every Slack message",
+    thoughts:
+    "Half the internship experience is pretending you understand what’s happening while your brain is buffering internally.",
+    audio:"./assets/song3.mp3"
+  },
+
+  {
+    name:"Riya",
+    song:"Glass Elevator",
+    emotion:"fake confidence becoming real confidence",
+    thoughts:
+    "I thought everyone else had life figured out. Turns out we’re all just improvising professionally.",
+    audio:"./assets/song4.mp3"
+  },
+
+  {
+    name:"Aarav",
+    song:"Late Night Commute",
+    emotion:"tired but hopeful",
+    thoughts:
+    "Somewhere between office coffee and late-night metro rides, you slowly become an adult without noticing.",
+    audio:"./assets/song5.mp3"
+  },
+
+  {
+    name:"Meher",
+    song:"Voicemail From Home",
+    emotion:"missing home while chasing growth",
+    thoughts:
+    "Leaving comfort behind hurts. But staying the same would’ve hurt more.",
+    audio:"./assets/song6.mp3"
+  }
+
+];
+
+const grid = document.getElementById("grid");
+
+TEAM.forEach((member,index)=>{
+
+  const card = document.createElement("div");
+
+  card.className = "card";
+
+  card.innerHTML = `
+  
+    <div class="floor">
+      FLOOR ${String(index+1).padStart(2,"0")}
+    </div>
+
+    <h3>${member.name}</h3>
+
+    <div class="song">
+      ${member.song}
+    </div>
+
+    <div class="thoughts">
+      ${member.thoughts}
+    </div>
+
+    <div class="emotion">
+      ${member.emotion}
+    </div>
+
+    <button class="play-btn">
+      Play Song
+    </button>
+
+  `;
+
+  const btn = card.querySelector(".play-btn");
+
+  const audio = new Audio(member.audio);
+
+  let playing = false;
+
+  btn.addEventListener("click",()=>{
+
+    document.querySelectorAll(".play-btn").forEach(b=>{
+      if(b!==btn){
+        b.innerText="Play Song";
+      }
+    });
+
+    if(!playing){
+
+      audio.play();
+
+      btn.innerText="Pause Song";
+
+      playing=true;
+
+    }else{
+
+      audio.pause();
+
+      btn.innerText="Play Song";
+
+      playing=false;
+    }
+  });
+
+  grid.appendChild(card);
+
+});
+
+
+// VIDEO MUTE
+
+const video = document.getElementById("heroVideo");
+const muteBtn = document.getElementById("muteBtn");
+
+muteBtn.addEventListener("click",()=>{
+
+  video.muted = !video.muted;
+
+  muteBtn.innerText = video.muted
+    ? "Unmute Video"
+    : "Mute Video";
+
+});
+
+
+// PARTICLES
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+let w,h,particles=[];
+
+function resize(){
+
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+
+function createParticles(){
+
+  particles=[];
+
+  for(let i=0;i<70;i++){
+
+    particles.push({
+
+      x:Math.random()*w,
+      y:Math.random()*h,
+
+      r:Math.random()*2,
+
+      dx:(Math.random()-0.5)*0.3,
+      dy:(Math.random()-0.5)*0.3
+    });
+  }
+}
+
+function animate(){
+
+  ctx.clearRect(0,0,w,h);
+
+  particles.forEach(p=>{
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x<0 || p.x>w) p.dx *= -1;
+    if(p.y<0 || p.y>h) p.dy *= -1;
+
+    ctx.beginPath();
+
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+    ctx.fillStyle="rgba(245,178,93,0.5)";
+
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+resize();
+createParticles();
+animate();
+
+window.addEventListener("resize",()=>{
+
+  resize();
+  createParticles();
+});
+
+</script>
+
+</body>
+</html>
